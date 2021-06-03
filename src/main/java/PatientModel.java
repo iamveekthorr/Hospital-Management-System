@@ -1,18 +1,30 @@
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Random;
-
 public class PatientModel {
     String firstName, lastName, nextOfKinName;
     int phoneNumber;
     int nextOfKinPhoneNumber;
     int age, uniqueID;
 
-    PatientModel(int id,int age, int phoneNumber, int nextOfKinPhoneNumber,
+    PatientModel(){
+
+    }
+
+    PatientModel(int id){
+        setId(id);
+    }
+
+    /**
+     * @param id
+     * @param age
+     * @param phoneNumber
+     * @param nextOfKinPhoneNumber
+     * @param firstName
+     * @param lastName
+     * @param nextOfKinName
+     * */
+    PatientModel(@NotNull int id,int age, int phoneNumber, int nextOfKinPhoneNumber,
                  String firstName, String lastName, String nextOfKinName ){
         setAge(age);
         setFirstName(firstName);
@@ -37,8 +49,10 @@ public class PatientModel {
     public String getFirstName() {
         return firstName;
     }
-
-    public void setFirstName(String firstName) {
+    /**
+     * @param firstName
+     * */
+    public void setFirstName(@NotNull String firstName) {
         this.firstName = firstName;
     }
 

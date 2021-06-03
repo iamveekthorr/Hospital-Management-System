@@ -1,15 +1,18 @@
-import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class DoctorModel {
     String password;
     String firstName, lastName;
     int phoneNumber;
     int age, id;
+
+    DoctorModel(){
+
+    }
+    DoctorModel(int id){
+        setId(id);
+    }
+
 
     DoctorModel(int id, int age, int phoneNumber,
                  String firstName, String lastName, String password){

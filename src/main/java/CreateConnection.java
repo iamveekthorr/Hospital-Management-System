@@ -1,6 +1,4 @@
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class CreateConnection {
     static final String URL_STRING = "jdbc:mysql://localhost:3306/hospitaldb";
@@ -46,12 +44,13 @@ public class CreateConnection {
         try{
             setConn(DriverManager.getConnection(getUrlString().concat(getTIMEZONE()), getUSER(), getPASSWORD()));
             Connection dbConnection = getConn();
-            String createPatientTableStatement = new PatientQueries().createPatientTable();
-            String createDoctorsTableStatement = new DoctorQueries().createDoctorTable();
+            String createPatientTableStatement = PatientQueries.createPatientTable();
+            String createDoctorsTableStatement = DoctorQueries.createDoctorTable();
             PreparedStatement createDoctorsTable = dbConnection.prepareStatement(createDoctorsTableStatement);
             PreparedStatement createPatientsTable = dbConnection.prepareStatement(createPatientTableStatement);
             createDoctorsTable.execute();
             createPatientsTable.execute();
+            System.out.println("connected");
         }catch(SQLException ex){
             System.err.println(ex.getMessage());
         }

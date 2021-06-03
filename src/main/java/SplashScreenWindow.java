@@ -1,15 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
 
-public class SplashScreenWindow extends JFrame {
+public class SplashScreenWindow extends JFrame implements Runnable{
     JPanel contentPane;
     JLabel imageLabel = new JLabel();
+    String url;
 
-    public SplashScreenWindow(String url) {
+    public SplashScreenWindow() {
+
+    }
+
+    @Override
+    public void run() {
         try {
+            url = "C:\\Users\\Devthorr\\Documents\\splashScreen.gif";
             ImageIcon imageIcon = new ImageIcon(url);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             contentPane = (JPanel) getContentPane();
@@ -19,16 +23,16 @@ public class SplashScreenWindow extends JFrame {
             imageLabel.setIcon(imageIcon);
             contentPane.add(imageLabel, java.awt.BorderLayout.CENTER);
             this.setLocationRelativeTo(null);
-            addMouseListener(new MouseAdapter()
-            {
-                public void mousePressed(MouseEvent e)
-                {
-                    setVisible(false);
-                    dispose();
-                }
-            });
+            this.setAlwaysOnTop(true);
             this.setVisible(true);
-        } catch (Exception exception) {
+            Timer timer = new Timer(10000, e -> {
+                setVisible(false);
+                dispose();
+            });
+            timer.start();
+
+        }
+        catch (Exception exception) {
             exception.printStackTrace();
         }
     }

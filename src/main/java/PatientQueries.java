@@ -1,11 +1,10 @@
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 public class PatientQueries {
-    String createPatientTable(){
+    @NotNull
+    @Contract(pure = true)
+    static String createPatientTable(){
         return "CREATE TABLE IF NOT EXISTS Patients(" +
                 "PATIENT_ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                 "FIRST_NAME TEXT NOT NULL," +
@@ -23,7 +22,9 @@ public class PatientQueries {
                 "UNIQUE(PATIENT_ID))" ;
     }
 
-    String insertPatientQuery(){
+    @NotNull
+    @Contract(pure = true)
+    static String insertPatientQuery(){
         return "INSERT INTO Patients(FIRST_NAME, LAST_NAME, AGE, SYMPTOMS_DESCRIPTION," +
                         "PHONE_NUMBER, NEXT_OF_KIN_NAME, NEXT_OF_KIN_PHONE_NUMBER)" +
                         "VALUES( ? , ? , ? , ? , ? , ?, ?)" ;

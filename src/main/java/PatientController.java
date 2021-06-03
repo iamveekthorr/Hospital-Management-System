@@ -36,8 +36,7 @@ public class PatientController {
                    int phoneNumber, int age, int nextOfKinPhoneNumber){
         int result = 0;
         try{
-            PatientQueries newPatient = new PatientQueries();
-            String insertStatement = newPatient.insertPatientQuery();
+            String insertStatement = PatientQueries.insertPatientQuery();
             PreparedStatement addNewPatient = CreateConnection.getConn().prepareStatement(insertStatement);
             addNewPatient.setString(1, firstName);
             addNewPatient.setString(2, lastName);

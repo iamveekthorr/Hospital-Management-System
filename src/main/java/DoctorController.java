@@ -12,7 +12,7 @@ public class DoctorController {
         List<DoctorModel> doctors = null;
         ResultSet resultSet;
         try{
-            resultSet = new DoctorQueries().selectAllDoctors().executeQuery();
+            resultSet = DoctorQueries.selectAllDoctors().executeQuery();
             doctors = new ArrayList<>();
             while(resultSet.next()){
                 doctors.add(new DoctorModel(
@@ -29,12 +29,26 @@ public class DoctorController {
         return doctors;
     }
 
+    List<DoctorModel> getOneDoctor(){
+        List<DoctorModel> doctor = null;
+        ResultSet resultSet;
+        try{
+            resultSet = DoctorQueries.selectOneDoctor().executeQuery();
+            doctor = new ArrayList<>();
+            while(resultSet.next()){
+                doctor.add(new DoctorModel(resultSet.getInt("DOCTOR_ID")));
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return doctor;
+    }
+
     int addDoctor(String firstName, String lastName, String nextOfKinName,
                    int phoneNumber, int age, int nextOfKinPhoneNumber){
         int result = 0;
         try{
-            DoctorQueries newDoctor = new DoctorQueries();
-            String insertStatement = newDoctor.insertIntoDoctorsTable();
+            String insertStatement = DoctorQueries.insertIntoDoctorsTable();
             PreparedStatement addNewPatient = CreateConnection.getConn().prepareStatement(insertStatement);
             addNewPatient.setString(1, firstName);
             addNewPatient.setString(2, lastName);
