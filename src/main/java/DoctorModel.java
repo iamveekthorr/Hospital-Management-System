@@ -1,10 +1,8 @@
 import org.mindrot.jbcrypt.BCrypt;
 
 public class DoctorModel {
-    String password;
-    String firstName, lastName;
-    int phoneNumber;
-    int age, id;
+    String password, firstName, lastName, phoneNumber, age;
+    int id;
 
     DoctorModel(){
 
@@ -14,7 +12,7 @@ public class DoctorModel {
     }
 
 
-    DoctorModel(int id, int age, int phoneNumber,
+    DoctorModel(int id, String age, String phoneNumber,
                  String firstName, String lastName, String password){
         setAge(age);
         setFirstName(firstName);
@@ -51,26 +49,27 @@ public class DoctorModel {
         this.lastName = lastName;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
 
     public void setPassword(String password) {
         // salt of 12
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        this.password = password;
+        System.out.println("password is" + password);
     }
 
 

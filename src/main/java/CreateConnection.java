@@ -50,7 +50,6 @@ public class CreateConnection {
             PreparedStatement createPatientsTable = dbConnection.prepareStatement(createPatientTableStatement);
             createDoctorsTable.execute();
             createPatientsTable.execute();
-            System.out.println("connected");
         }catch(SQLException ex){
             System.err.println(ex.getMessage());
         }

@@ -25,7 +25,7 @@ public class SplashScreenWindow extends JFrame implements Runnable{
             this.setLocationRelativeTo(null);
             this.setAlwaysOnTop(true);
             this.setVisible(true);
-            Timer timer = new Timer(10000, e -> {
+            Timer timer = new Timer(1000, e -> {
                 setVisible(false);
                 dispose();
             });

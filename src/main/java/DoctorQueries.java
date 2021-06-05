@@ -9,23 +9,23 @@ public class DoctorQueries {
     @Contract(pure = true)
     static String createDoctorTable(){
         return  "CREATE TABLE IF NOT EXISTS Doctors(DOCTOR_ID INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL, " +
-                "DOCTOR_FIRST_NAME TEXT NOT NULL, DOCTOR_LAST_NAME TEXT NOT NULL, " +
-                "AGE INTEGER NOT NULL, ROLE VARCHAR(50) NOT NULL DEFAULT 'DIAGNOSTICIAN'," +
+                "NAME TEXT NOT NULL, PHONE_NUMBER VARCHAR(11) NOT NULL," +
+                "AGE VARCHAR(50) NOT NULL, ROLE VARCHAR(50) NOT NULL DEFAULT 'DIAGNOSTICIAN'," +
                 "DEPARTMENT VARCHAR(50) DEFAULT 'GENERAL MEDICINE', PASSWORD LONGTEXT NOT NULL)";
     }
 
     @NotNull
     @Contract(pure = true)
     static String insertIntoDoctorsTable(){
-        return "INSERT INTO Doctors(DOCTOR_FIRST_NAME, DOCTOR_LAST_NAME, AGE," +
-                "DEPARTMENT, PASSWORD)" +
-                "VALUES( ? , ? , ? , ? , ? )" ;
+        return "INSERT INTO Doctors(NAME, ROLE, AGE," +
+                "DEPARTMENT, PASSWORD, PHONE_NUMBER)" +
+                "VALUES( ? , ? , ? , ? , ?, ? )" ;
     }
 
     static PreparedStatement selectAllDoctors(){
         PreparedStatement selectDoctors = null;
         try{
-            String selectStatement = "SELECT * FROM Patients";
+            String selectStatement = "SELECT * FROM Doctors";
             selectDoctors = CreateConnection.getConn().prepareStatement(selectStatement);
         }catch (SQLException ex){
             ex.printStackTrace();
@@ -33,11 +33,13 @@ public class DoctorQueries {
         return selectDoctors;
     }
 
-    static PreparedStatement selectOneDoctor(){
+    static PreparedStatement selectOneDoctor(String name){
         PreparedStatement selectDoctor = null;
-        String selectDoctorStatement = "SELECT FIRST_NAME FROM Doctors WHERE ID = ?";
+        String selectDoctorStatement = "SELECT * FROM Doctors WHERE NAME = ?";
         try{
             selectDoctor = CreateConnection.getConn().prepareStatement(selectDoctorStatement);
+            selectDoctor.setString(1, name);
+            System.out.println(selectDoctor);
         }catch(SQLException ex){
             ex.printStackTrace();
         }

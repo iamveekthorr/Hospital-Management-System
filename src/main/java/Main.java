@@ -1,6 +1,5 @@
-import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatSolarizedLightIJTheme;
 import org.jdesktop.swingx.JXFrame;
 
 import javax.swing.*;
@@ -9,8 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 public class Main {
     public static void main(String[] args) {
         try{
+            new CreateConnection();
             UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
-            FlatLightLaf.install();
+            FlatSolarizedLightIJTheme.install();
             JXFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
             UIManager.put( "Component.focusWidth", 0 );
