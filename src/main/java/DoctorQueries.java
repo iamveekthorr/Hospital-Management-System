@@ -9,7 +9,7 @@ public class DoctorQueries {
     @Contract(pure = true)
     static String createDoctorTable(){
         return  "CREATE TABLE IF NOT EXISTS Doctors(DOCTOR_ID INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL, " +
-                "NAME TEXT NOT NULL, PHONE_NUMBER VARCHAR(11) NOT NULL," +
+                "NAME TEXT NOT NULL, PHONE_NUMBER VARCHAR(11) NOT NULL UNIQUE," +
                 "AGE VARCHAR(50) NOT NULL, ROLE VARCHAR(50) NOT NULL DEFAULT 'DIAGNOSTICIAN'," +
                 "DEPARTMENT VARCHAR(50) DEFAULT 'GENERAL MEDICINE', PASSWORD LONGTEXT NOT NULL)";
     }
@@ -33,12 +33,12 @@ public class DoctorQueries {
         return selectDoctors;
     }
 
-    static PreparedStatement selectOneDoctor(String name){
+    static PreparedStatement selectOneDoctor(String phone){
         PreparedStatement selectDoctor = null;
-        String selectDoctorStatement = "SELECT * FROM Doctors WHERE NAME = ?";
+        String selectDoctorStatement = "SELECT * FROM Doctors WHERE PHONE_NUMBER = ?";
         try{
             selectDoctor = CreateConnection.getConn().prepareStatement(selectDoctorStatement);
-            selectDoctor.setString(1, name);
+            selectDoctor.setString(1, phone);
             System.out.println(selectDoctor);
         }catch(SQLException ex){
             ex.printStackTrace();

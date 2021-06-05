@@ -210,19 +210,21 @@ public class Login {
         JXPanel sectionContainer1, sectionContainer;
         sectionContainer1 = new JXPanel();
         sectionContainer = new JXPanel();
-        addBottomSection(label1, textField, sectionContainer1, "Name");
+        addBottomSection(label1, textField, sectionContainer1, "Phone");
         addBottomSection(label, passwordField, sectionContainer, "Password");
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 0.5;
         constraints.gridx = 0;
         constraints.gridy = y;
-        logIn.setEnabled(false);
         logIn.setBorder(new EmptyBorder(5, 100, 5, 100));
         rightSide.add(logIn, constraints);
         logIn.addActionListener(e -> {
-            System.out.println(DoctorController.getOneDoctor(textField.getText()));
-            new CheckFields(null, passwordField, logIn, FRAME, textField).checkPassword();
+            String phoneNumberText = textField.getText().trim();
+            String userPassword = String.valueOf(passwordField.getPassword()).trim();
+            System.out.println(DoctorController.getOneDoctor(phoneNumberText, userPassword));
+            if(!new CheckFields( passwordField, logIn, FRAME, textField).checkPassword((JComponent) null))
+                DoctorController.getOneDoctor(phoneNumberText, userPassword);
         });
 
 
@@ -295,20 +297,47 @@ public class Login {
         rightSide.add(submitBtn, constraints);
         submitBtn.addActionListener(e -> {
             System.out.println("Hello from the outside");
-            if(!new CheckFields(passwordConfirmField, passwordField, submitBtn,
+            Boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
                     FRAME, nameTextField, roleField, phoneField,
-                    departmentField, ageField).checkPassword())
-            {
-                System.out.println("Hello");
-                int user_id = DoctorController.createDoctor(nameTextField.getText().strip()
+                    departmentField, ageField).checkPassword();
+            if(!shouldWriteIntoDB) {
+                int nextScreen = DoctorController.createDoctor(nameTextField.getText().strip()
                         , roleField.getText().strip(),
                         phoneField.getText().trim(), ageField.getText().trim(),
                         departmentField.getText().strip(),
-                        String.valueOf(passwordField.getPassword()));
-                setUser_id(user_id);
+                        String.valueOf(passwordField.getPassword()), FRAME);
+                if (nextScreen != 0){
+                    removeElements();
+                    SwingUtilities.updateComponentTreeUI(rightSide);
+                    swingWorkerUpdateUI();
+                    setUser_id(nextScreen);
+                }
             }
 
         });
 
+    }
+
+    void removeElements(){
+        for(Component comp : rightSide.getComponents()){
+            rightSide.remove(comp);
+        }
+    }
+
+    void swingWorkerUpdateUI(){
+        SwingWorker sw = new SwingWorker<>() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                SwingUtilities.updateComponentTreeUI(rightSide);
+                return null;
+            }
+            @Override
+            protected void done() {
+                signIn();
+                SwingUtilities.updateComponentTreeUI(rightSide);
+                super.done();
+            }
+        };
+        sw.execute();
     }
 }

@@ -3,17 +3,14 @@ import org.mindrot.jbcrypt.BCrypt;
 public class DoctorModel {
     String password, firstName, lastName, phoneNumber, age;
     int id;
+    boolean isAuthenticatedUser;
 
-    DoctorModel(){
+    DoctorModel() {
 
     }
-    DoctorModel(int id){
-        setId(id);
-    }
-
 
     DoctorModel(int id, String age, String phoneNumber,
-                 String firstName, String lastName, String password){
+                String firstName, String lastName, String password) {
         setAge(age);
         setFirstName(firstName);
         setLastName(lastName);
@@ -22,9 +19,29 @@ public class DoctorModel {
         setPassword(password);
     }
 
+    public DoctorModel(String name, boolean isAuthenticated) {
+        setFirstName(name);
+        setAuthenticatedUser(isAuthenticated);
+    }
+    public DoctorModel(String name, String password, String hashedPassword) {
+        setFirstName(name);
+        if(!name.isEmpty() || !name.isBlank()){
+            BCrypt.checkpw(password, hashedPassword);
+        }
+    }
+
+    public boolean isAuthenticatedUser() {
+        return isAuthenticatedUser;
+    }
+
+    public void setAuthenticatedUser(boolean authenticatedUser) {
+        isAuthenticatedUser = authenticatedUser;
+    }
+
     public String getPassword() {
         return password;
     }
+
     public int getId() {
         return id;
     }
@@ -67,9 +84,7 @@ public class DoctorModel {
 
 
     public void setPassword(String password) {
-        // salt of 12
         this.password = password;
-        System.out.println("password is" + password);
     }
 
 
