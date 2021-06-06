@@ -51,7 +51,7 @@ public class CreateConnection {
             createDoctorsTable.execute();
             createPatientsTable.execute();
         }catch(SQLException ex){
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

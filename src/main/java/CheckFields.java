@@ -11,7 +11,6 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     JXFrame currentFame;
 
 
-
     CheckFields() {
 
     }
@@ -26,7 +25,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     }
 
     CheckFields(JPasswordField passwordField, JXButton btn,
-                 JXFrame currFrame, JXTextField... textAreas) {
+                JXFrame currFrame, JXTextField... textAreas) {
         this.currentFame = currFrame;
         setFields(textAreas);
         setPasswordField(passwordField);
@@ -56,6 +55,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     public void setBtnConfirm(JXButton btnConfirm) {
         this.btnConfirm = btnConfirm;
     }
+
     public JXTextField[] getFields() {
         return fields;
     }
@@ -75,36 +75,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     }
 
 
-    public Boolean checkPassword() {
-        for (JXTextField field : getFields()) {
-                if (field.getText().trim().isBlank() || field.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(currentFame, "All fields are required.",
-                            "Required fields",
-                            JOptionPane.WARNING_MESSAGE);
-                    return true;
-                }
-        }
-        if (String.valueOf(getPasswordField().getPassword()).trim().isEmpty() || String.valueOf(getPasswordField().getPassword()).trim().isBlank()
-                || String.valueOf(getPasswordConfirm().getPassword()).isEmpty() || String.valueOf(getPasswordConfirm().getPassword()).isBlank()){
-            JOptionPane.showMessageDialog(currentFame, "This Field is required",
-                    "Empty Field",
-                    JOptionPane.WARNING_MESSAGE);
-            return true;
-        }
-
-        if(!String.valueOf(getPasswordField().getPassword()).trim()
-                .equalsIgnoreCase(String.valueOf(getPasswordConfirm().getPassword()).trim()))
-        {
-            JOptionPane.showMessageDialog(currentFame, "Password Mismatch, please check to correct.",
-                            "Password Mismatch",
-                            JOptionPane.WARNING_MESSAGE);
-        }
-        else return false;
-
-        return true;
-    }
-
-    public Boolean checkPassword(JComponent...args) {
+    public Boolean checkPassword(String determinant) {
         for (JXTextField field : getFields()) {
             if (field.getText().trim().isBlank() || field.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(currentFame, "All fields are required.",
@@ -113,11 +84,31 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
                 return true;
             }
         }
-        if (String.valueOf(getPasswordField().getPassword()).trim().isEmpty() || String.valueOf(getPasswordField().getPassword()).trim().isBlank()){
-            JOptionPane.showMessageDialog(currentFame, "This Field is required",
-                    "Empty Field",
-                    JOptionPane.WARNING_MESSAGE);
+        if (determinant.equalsIgnoreCase("Sign up")) {
+            if (String.valueOf(getPasswordField().getPassword()).trim().isEmpty() ||
+                    String.valueOf(getPasswordField().getPassword()).trim().isBlank()
+                    || String.valueOf(getPasswordConfirm().getPassword()).isEmpty() ||
+                    String.valueOf(getPasswordConfirm().getPassword()).isBlank()) {
+                JOptionPane.showMessageDialog(currentFame, "This Field is required",
+                        "Empty Field",
+                        JOptionPane.WARNING_MESSAGE);
+                return true;
+            }
+            if (!String.valueOf(getPasswordField().getPassword()).trim()
+                    .equalsIgnoreCase(String.valueOf(getPasswordConfirm().getPassword()).trim())) {
+                JOptionPane.showMessageDialog(currentFame, "Password Mismatch, please check to correct.",
+                        "Password Mismatch",
+                        JOptionPane.WARNING_MESSAGE);
+            } else return false;
             return true;
+        } else {
+            if(String.valueOf(getPasswordField().getPassword()).trim().isEmpty()
+                    || String.valueOf(getPasswordField().getPassword()).trim().isBlank()){
+                JOptionPane.showMessageDialog(currentFame, "This Field is required",
+                        "Empty Field",
+                        JOptionPane.WARNING_MESSAGE);
+                return true;
+            }
         }
 
         return false;

@@ -46,7 +46,8 @@ public class DoctorController {
                         password, resultSet.getString("PASSWORD")
                 ));
             }
-            System.out.println(doctor.toString());
+
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -92,9 +93,6 @@ public class DoctorController {
             addNewDoctor.setString(6, phoneNumber);
             result = addNewDoctor.executeUpdate();
 
-            JOptionPane.showMessageDialog(currentFrame, "Registration successful please wait....",
-                    "Successful registration",
-                    JOptionPane.INFORMATION_MESSAGE);
             return result;
 
         } catch (SQLException ex) {

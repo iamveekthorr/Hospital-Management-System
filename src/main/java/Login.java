@@ -11,7 +11,6 @@ import java.io.IOException;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Login {
-    public final static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     public static JXFrame FRAME;
     static JXPanel CONTAINER = new JXPanel(new BorderLayout());
     final static boolean shouldFill = true;
@@ -222,9 +221,14 @@ public class Login {
         logIn.addActionListener(e -> {
             String phoneNumberText = textField.getText().trim();
             String userPassword = String.valueOf(passwordField.getPassword()).trim();
-            System.out.println(DoctorController.getOneDoctor(phoneNumberText, userPassword));
-            if(!new CheckFields( passwordField, logIn, FRAME, textField).checkPassword((JComponent) null))
+            Boolean shouldWriteIntoDb = new CheckFields( passwordField, logIn, FRAME, textField)
+                    .checkPassword("Sign In");
+            if(!shouldWriteIntoDb) {
                 DoctorController.getOneDoctor(phoneNumberText, userPassword);
+                JOptionPane.showMessageDialog(FRAME, "Login successful please wait....",
+                        "Successful Login",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         });
 
 
@@ -296,24 +300,33 @@ public class Login {
         submitBtn.setBorder(new EmptyBorder(5, 100, 5, 100));
         rightSide.add(submitBtn, constraints);
         submitBtn.addActionListener(e -> {
-            System.out.println("Hello from the outside");
-            Boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
+            boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
                     FRAME, nameTextField, roleField, phoneField,
-                    departmentField, ageField).checkPassword();
+                    departmentField, ageField).checkPassword("Sign up");
+            boolean user = DoctorController.getOneDoctor(phoneField.getText(),
+                    String.valueOf(passwordField.getPassword())).isEmpty();
             if(!shouldWriteIntoDB) {
-                int nextScreen = DoctorController.createDoctor(nameTextField.getText().strip()
-                        , roleField.getText().strip(),
-                        phoneField.getText().trim(), ageField.getText().trim(),
-                        departmentField.getText().strip(),
-                        String.valueOf(passwordField.getPassword()), FRAME);
-                if (nextScreen != 0){
-                    removeElements();
-                    SwingUtilities.updateComponentTreeUI(rightSide);
-                    swingWorkerUpdateUI();
-                    setUser_id(nextScreen);
+                if (!user){
+                    JOptionPane.showMessageDialog(FRAME, "Invalid credentials for current user.",
+                            "Failed registration",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }else {
+                    int nextScreen = DoctorController.createDoctor(nameTextField.getText().strip()
+                            , roleField.getText().strip(),
+                            phoneField.getText().trim(), ageField.getText().trim(),
+                            departmentField.getText().strip(),
+                            String.valueOf(passwordField.getPassword()), FRAME);
+                    if (nextScreen != 0){
+                        JOptionPane.showMessageDialog(FRAME, "Registration successful please wait....",
+                                "Successful registration",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        removeElements();
+                        SwingUtilities.updateComponentTreeUI(rightSide);
+                        swingWorkerUpdateUI();
+                        setUser_id(nextScreen);
+                    }
                 }
             }
-
         });
 
     }
