@@ -228,6 +228,8 @@ public class Login {
                 JOptionPane.showMessageDialog(FRAME, "Login successful please wait....",
                         "Successful Login",
                         JOptionPane.INFORMATION_MESSAGE);
+                FRAME.dispose();
+                new MainWindow();
             }
         });
 
