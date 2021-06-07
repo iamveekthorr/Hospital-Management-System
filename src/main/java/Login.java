@@ -1,4 +1,5 @@
 import org.jdesktop.swingx.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class Login {
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
     JXPanel rightSide = new JXPanel(new GridBagLayout());
+    // sets the y value for every component on the right JPanel
     int y = rightSide.getComponents().length;
     static int user_id;
     JXLabel windowTitle = new JXLabel();
@@ -42,7 +44,11 @@ public class Login {
     public void setUser_id(int user_id) {
         Login.user_id = user_id;
     }
-
+    /**
+     * @return null
+     * sets login frame and as var FRAME,
+     * calls the add components method
+     * */
     void setLoginFrame() {
         FRAME = new JXFrame("Welcome");
         FRAME.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -57,9 +63,14 @@ public class Login {
         addComponents();
         FRAME.validate();
     }
-
+    /**
+     * @return null,
+     * Adds components to setLoginFrame() method,
+     * */
     void addComponents() {
+        // 1) sets container size for JPanel
         CONTAINER.setPreferredSize(FRAME.getSize());
+        // 2) sets padding to JPanel on the right side.
         rightSide.setBorder(new EmptyBorder(0, 30, 0, 30));
 
         if (RIGHT_TO_LEFT) {
@@ -73,10 +84,10 @@ public class Login {
         constraints.insets = new Insets(3,0,3,0);
         constraints.ipady = 7;
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = y++;
         signInBtn.setText("SIGN IN");
         signInBtn.setBorder(new EmptyBorder(5, 100, 5, 100));
-        rightSide.add(signInBtn, constraints);
+        rightSide.add(signInBtn, constraints); //adds sign in
 
         if (RIGHT_TO_LEFT) {
             rightSide.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -127,16 +138,17 @@ public class Login {
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.ipady = 7;
-        constraints.gridy = 2;
+        constraints.gridy = y++;
         constraints.gridx = 0;
         signUpBtn.setText("SIGN UP");
         signUpBtn.setBorder(new EmptyBorder(5, 100, 5, 100));
-        rightSide.add(signUpBtn, constraints);
+        rightSide.add(signUpBtn, constraints); // add sign up button to right side
 
-
+        // Sets size for both JPanels in FRAME
         leftSide.setPreferredSize(new Dimension(350, 500));
         rightSide.setPreferredSize(new Dimension(350, 500));
 
+        // Path to image on the left side
         String url = "C:\\Users\\Devthorr\\Documents\\leftIMG.png";
 
         try {
@@ -149,15 +161,15 @@ public class Login {
         }catch(IOException ex){
             ex.printStackTrace();
         }
-
+        // Adds JPanels to JFrame
         CONTAINER.add(leftSide, BorderLayout.LINE_START);
         CONTAINER.add(rightSide, BorderLayout.LINE_END);
         FRAME.add(CONTAINER, BorderLayout.SOUTH);
     }
 
-    void addBottomSection(JXLabel label, JComponent component, JXPanel container,
+    void addBottomSection(@NotNull JXLabel label, JComponent component, JXPanel container,
                           String labelName){
-        container.setLayout(new BorderLayout());
+        container.setLayout(new BorderLayout()); // Set layout for section container
 
         // Add label
         label.setText(labelName);
@@ -173,9 +185,12 @@ public class Login {
         constraints.gridx = 0;
         constraints.gridy = y++;
 
-        rightSide.add(container, constraints);
+        rightSide.add(container, constraints); // Adds section container to right JPanel
     }
-
+    /**
+     * @return null
+     * Sign in view
+     * */
     void signIn(){
         windowTitle.setText("Sign In");
         windowTitle.setFont(new Font(CONTAINER.getFont().getName(), Font.PLAIN, 24));
@@ -235,7 +250,10 @@ public class Login {
 
 
     }
-
+    /**
+     * @return null,
+     * Sign up View
+     * */
     void signUp(){
         windowTitle.setText("Sign Up");
         windowTitle.setFont(new Font(CONTAINER.getFont().getName(), Font.PLAIN, 24));
@@ -273,6 +291,7 @@ public class Login {
         passwordField= new JPasswordField();
         JXPanel sectionContainer;
 
+        // Adds sections to the Right JPanel
         sectionContainer = new JXPanel();
         label = new JXLabel();
         addBottomSection(label, nameTextField, sectionContainer, "Name");
@@ -300,7 +319,7 @@ public class Login {
         constraints.gridx = 0;
         constraints.gridy = y++;
         submitBtn.setBorder(new EmptyBorder(5, 100, 5, 100));
-        rightSide.add(submitBtn, constraints);
+        rightSide.add(submitBtn, constraints); // Adds submit button to the JPanel in the signUp page
         submitBtn.addActionListener(e -> {
             boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
                     FRAME, nameTextField, roleField, phoneField,
@@ -308,11 +327,15 @@ public class Login {
             boolean user = DoctorController.getOneDoctor(phoneField.getText(),
                     String.valueOf(passwordField.getPassword())).isEmpty();
             if(!shouldWriteIntoDB) {
+                // Checks if user already exists in the database
                 if (!user){
-                    JOptionPane.showMessageDialog(FRAME, "Invalid credentials for current user.",
+                    JOptionPane.showMessageDialog(FRAME, "Invalid credentials for current user," +
+                                    " phone number is already in use.",
                             "Failed registration",
                             JOptionPane.INFORMATION_MESSAGE);
                 }else {
+                    // If no user exists direct the existing user to sign in using their
+                    // just entered credentials (Phone Number and Password)
                     int nextScreen = DoctorController.createDoctor(nameTextField.getText().strip()
                             , roleField.getText().strip(),
                             phoneField.getText().trim(), ageField.getText().trim(),
@@ -325,21 +348,23 @@ public class Login {
                         removeElements();
                         SwingUtilities.updateComponentTreeUI(rightSide);
                         swingWorkerUpdateUI();
-                        setUser_id(nextScreen);
+                        setUser_id(nextScreen); // Sets current to the variable user_id
                     }
                 }
             }
         });
 
     }
-
+    // Removes all Elements form the JPanel
     void removeElements(){
         for(Component comp : rightSide.getComponents()){
             rightSide.remove(comp);
         }
     }
 
+    // Use SwingWorker to update the UI
     void swingWorkerUpdateUI(){
+        //noinspection rawtypes
         SwingWorker sw = new SwingWorker<>() {
             @Override
             protected Object doInBackground() throws Exception {
@@ -353,6 +378,6 @@ public class Login {
                 super.done();
             }
         };
-        sw.execute();
+        sw.execute(); // Executes the Swing Worker
     }
 }

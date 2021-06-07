@@ -30,7 +30,6 @@ public class SplashScreenWindow extends JFrame implements Runnable{
                 dispose();
             });
             timer.start();
-
         }
         catch (Exception exception) {
             exception.printStackTrace();
