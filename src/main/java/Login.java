@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -236,10 +237,17 @@ public class Login {
         logIn.addActionListener(e -> {
             String phoneNumberText = textField.getText().trim();
             String userPassword = String.valueOf(passwordField.getPassword()).trim();
-            Boolean shouldWriteIntoDb = new CheckFields( passwordField, logIn, FRAME, textField)
+            boolean shouldWriteIntoDb = new CheckFields( passwordField, logIn, FRAME, textField)
                     .checkPassword("Sign In");
+            List<DoctorModel> user = DoctorController.getOneDoctor(phoneNumberText,
+                    userPassword);
             if(!shouldWriteIntoDb) {
-                DoctorController.getOneDoctor(phoneNumberText, userPassword);
+                if(user.isEmpty()) {
+                    JOptionPane.showMessageDialog(FRAME, "User not found..",
+                        "Invalid user credentials",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 JOptionPane.showMessageDialog(FRAME, "Login successful please wait....",
                         "Successful Login",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -324,11 +332,11 @@ public class Login {
             boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
                     FRAME, nameTextField, roleField, phoneField,
                     departmentField, ageField).checkPassword("Sign up");
-            boolean user = DoctorController.getOneDoctor(phoneField.getText(),
-                    String.valueOf(passwordField.getPassword())).isEmpty();
+            List<DoctorModel> user = DoctorController.getOneDoctor(phoneField.getText(),
+                    String.valueOf(passwordField.getPassword()));
             if(!shouldWriteIntoDB) {
                 // Checks if user already exists in the database
-                if (!user){
+                if (!user.isEmpty()){
                     JOptionPane.showMessageDialog(FRAME, "Invalid credentials for current user," +
                                     " phone number is already in use.",
                             "Failed registration",
