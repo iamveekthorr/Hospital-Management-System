@@ -81,6 +81,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
                 JOptionPane.showMessageDialog(currentFame, "All fields are required.",
                         "Required fields",
                         JOptionPane.WARNING_MESSAGE);
+                field.requestFocusInWindow();
                 return true;
             }
         }
