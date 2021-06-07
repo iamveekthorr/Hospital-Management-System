@@ -15,6 +15,14 @@ public class PatientModel {
         setId(id);
     }
 
+    // This is for authenticating a user
+    PatientModel(String name, String password, String hashedPassword) {
+        setFirstName(name);
+        if(!name.isEmpty() || !name.isBlank()){
+            BCrypt.checkpw(password, hashedPassword);
+        }
+    }
+
     /**
      * @param id
      * @param age

@@ -6,5 +6,8 @@ public class MainWindow extends JXFrame{
         this.setSize(1200, 900);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setTitle("Hospital Management System");
     }
+
+
 }

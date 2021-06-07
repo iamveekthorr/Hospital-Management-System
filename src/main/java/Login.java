@@ -22,6 +22,7 @@ public class Login {
     // sets the y value for every component on the right JPanel
     int y = rightSide.getComponents().length;
     static int user_id;
+    static List<DoctorModel> currentUser;
     JXLabel windowTitle = new JXLabel();
     JXPanel leftSide = new JXPanel();
     JXButton signInBtn = new JXButton();
@@ -33,7 +34,13 @@ public class Login {
     Login() {
 
     }
+    public static List<DoctorModel> getCurrentUser() {
+        return currentUser;
+    }
 
+    public static void setCurrentUser(List<DoctorModel> currentUser) {
+        Login.currentUser = currentUser;
+    }
     public static JXFrame getFRAME() {
         return FRAME;
     }
@@ -248,6 +255,7 @@ public class Login {
                         JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
+                setCurrentUser(user);
                 JOptionPane.showMessageDialog(FRAME, "Login successful please wait....",
                         "Successful Login",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -258,6 +266,7 @@ public class Login {
 
 
     }
+
     /**
      * @return null,
      * Sign up View
