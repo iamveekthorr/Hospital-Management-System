@@ -10,11 +10,12 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     JXButton btnConfirm;
     JXFrame currentFame;
 
-
+    // Default Constructor
     CheckFields() {
 
     }
 
+    // Constructor for sign up screen
     CheckFields(JPasswordField passwordField, JPasswordField passwordConfirm, JXButton btn,
                 JXFrame currFrame, JXTextField... textAreas) {
         this.currentFame = currFrame;
@@ -23,7 +24,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
         setBtnConfirm(btn);
         setPasswordConfirm(passwordConfirm);
     }
-
+    // Constructor for login screen
     CheckFields(JPasswordField passwordField, JXButton btn,
                 JXFrame currFrame, JXTextField... textAreas) {
         this.currentFame = currFrame;
@@ -76,7 +77,9 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
 
 
     public Boolean checkPassword(String determinant) {
-        for (JXTextField field : getFields()) {
+        // 1) Gets all fields as an array and check if they are empty
+        JXTextField[] jxTextFields = getFields();
+        for (JXTextField field : jxTextFields) {
             if (field.getText().trim().isBlank() || field.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(currentFame, "All fields are required.",
                         "Required fields",
@@ -85,6 +88,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
                 return true;
             }
         }
+        // Check is user is on the login screen
         if (determinant.equalsIgnoreCase("Sign up")) {
             if (String.valueOf(getPasswordField().getPassword()).trim().isEmpty() ||
                     String.valueOf(getPasswordField().getPassword()).trim().isBlank()
@@ -102,7 +106,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
                         JOptionPane.WARNING_MESSAGE);
             } else return false;
             return true;
-        } else {
+        } else { // If user is on the sign up screen
             if(String.valueOf(getPasswordField().getPassword()).trim().isEmpty()
                     || String.valueOf(getPasswordField().getPassword()).trim().isBlank()){
                 JOptionPane.showMessageDialog(currentFame, "This Field is required",

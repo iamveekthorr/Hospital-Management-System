@@ -41,6 +41,7 @@ public class Login {
     public static void setCurrentUser(List<DoctorModel> currentUser) {
         Login.currentUser = currentUser;
     }
+
     public static JXFrame getFRAME() {
         return FRAME;
     }
@@ -195,6 +196,7 @@ public class Login {
 
         rightSide.add(container, constraints); // Adds section container to right JPanel
     }
+
     /**
      * @return null
      * Sign in view
@@ -249,6 +251,7 @@ public class Login {
             List<DoctorModel> user = DoctorController.getOneDoctor(phoneNumberText,
                     userPassword);
             if(!shouldWriteIntoDb) {
+                System.out.println(user);
                 if(user.isEmpty()) {
                     JOptionPane.showMessageDialog(FRAME, "User not found..",
                         "Invalid user credentials",
@@ -263,7 +266,6 @@ public class Login {
                 new MainWindow();
             }
         });
-
 
     }
 

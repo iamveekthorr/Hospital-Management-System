@@ -33,20 +33,24 @@ public class DoctorController {
         return doctors;
     }
 
-    static List<DoctorModel> getOneDoctor(String name, String password) {
+    static List<DoctorModel> getOneDoctor(String phoneNumber, String password) {
         List<DoctorModel> doctor = null;
         ResultSet resultSet;
         try {
-            resultSet = DoctorQueries.selectOneDoctor(name).executeQuery();
+            resultSet = DoctorQueries.selectOneDoctor(phoneNumber).executeQuery();
+            System.out.print(resultSet.getRow());
             doctor = new ArrayList<>();
 
-            while (resultSet.next()) {
-                doctor.add(new DoctorModel(
-                       resultSet.getString("NAME"),
-                        password, resultSet.getString("PASSWORD")
-                ));
-            }
-
+                while (resultSet.next()) {
+                    boolean isAuthenticated = BCrypt.checkpw(password, resultSet.getString("PASSWORD"));
+                    System.out.println(password);
+                    if (isAuthenticated){
+                        doctor.add(new DoctorModel(
+                                resultSet.getString("NAME"),
+                                true
+                        ));
+                    }else return doctor;
+                }
 
         } catch (SQLException ex) {
             ex.printStackTrace();

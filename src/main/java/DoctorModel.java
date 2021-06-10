@@ -19,15 +19,9 @@ public class DoctorModel {
         setPassword(password);
     }
 
-    public DoctorModel(String name, boolean isAuthenticated) {
+    public DoctorModel(String name, boolean isAuthenticatedUser) {
         setFirstName(name);
-        setAuthenticatedUser(isAuthenticated);
-    }
-    public DoctorModel(String name, String password, String hashedPassword) {
-        setFirstName(name);
-        if(!name.isEmpty() || !name.isBlank()){
-            BCrypt.checkpw(password, hashedPassword);
-        }
+        setAuthenticatedUser(isAuthenticatedUser);
     }
 
     public boolean isAuthenticatedUser() {
