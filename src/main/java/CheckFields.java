@@ -76,7 +76,7 @@ public class CheckFields extends SwingWorker<Boolean, Object> {
     }
 
 
-    public Boolean checkPassword(String determinant) {
+    public boolean checkPassword(String determinant) {
         // 1) Gets all fields as an array and check if they are empty
         JXTextField[] jxTextFields = getFields();
         for (JXTextField field : jxTextFields) {

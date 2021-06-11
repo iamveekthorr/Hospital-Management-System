@@ -39,7 +39,6 @@ public class DoctorQueries {
         try{
             selectDoctor = CreateConnection.getConn().prepareStatement(selectDoctorStatement);
             selectDoctor.setString(1, phone);
-//            selectDoctor.setString(2, password);
             return selectDoctor;
         }catch(SQLException ex){
             ex.printStackTrace();

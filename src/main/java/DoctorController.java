@@ -38,25 +38,44 @@ public class DoctorController {
         ResultSet resultSet;
         try {
             resultSet = DoctorQueries.selectOneDoctor(phoneNumber).executeQuery();
-            System.out.print(resultSet.getRow());
             doctor = new ArrayList<>();
 
-                while (resultSet.next()) {
-                    boolean isAuthenticated = BCrypt.checkpw(password, resultSet.getString("PASSWORD"));
-                    System.out.println(password);
-                    if (isAuthenticated){
-                        doctor.add(new DoctorModel(
-                                resultSet.getString("NAME"),
-                                true
-                        ));
-                    }else return doctor;
-                }
+            while (resultSet.next()) {
+                boolean isAuthenticated = BCrypt.checkpw(password, resultSet.getString("PASSWORD"));
+                if (isAuthenticated) {
+                    doctor.add(new DoctorModel(
+                            resultSet.getString("NAME"),
+                            true
+                    ));
+                } else return doctor;
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return doctor;
     }
+
+    static List<DoctorModel> getDoctorByPhoneNumber(String phoneNumber) {
+        List<DoctorModel> doctor = null;
+        ResultSet resultSet;
+        try {
+            resultSet = DoctorQueries.selectOneDoctor(phoneNumber).executeQuery();
+            doctor = new ArrayList<>();
+
+            while (resultSet.next()) {
+                doctor.add(new DoctorModel(
+                        resultSet.getString("NAME"),
+                        true
+                ));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return doctor;
+    }
+
 
     static int createDoctor(String name, String role,
                             String phoneNumber, String age, String department, String password,
@@ -99,9 +118,10 @@ public class DoctorController {
 
             return result;
 
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return 1;
+        return 0;
     }
 }

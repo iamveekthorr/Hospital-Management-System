@@ -34,6 +34,7 @@ public class Login {
     Login() {
 
     }
+
     public static List<DoctorModel> getCurrentUser() {
         return currentUser;
     }
@@ -53,11 +54,12 @@ public class Login {
     public void setUser_id(int user_id) {
         Login.user_id = user_id;
     }
+
     /**
      * @return null
      * sets login frame and as var FRAME,
      * calls the add components method
-     * */
+     */
     void setLoginFrame() {
         FRAME = new JXFrame("Welcome");
         FRAME.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -72,10 +74,11 @@ public class Login {
         addComponents();
         FRAME.validate();
     }
+
     /**
      * @return null,
      * Adds components to setLoginFrame() method,
-     * */
+     */
     void addComponents() {
         // 1) sets container size for JPanel
         CONTAINER.setPreferredSize(FRAME.getSize());
@@ -90,7 +93,7 @@ public class Login {
             //natural height, maximum width
             constraints.fill = GridBagConstraints.HORIZONTAL;
         }
-        constraints.insets = new Insets(3,0,3,0);
+        constraints.insets = new Insets(3, 0, 3, 0);
         constraints.ipady = 7;
         constraints.gridx = 0;
         constraints.gridy = y++;
@@ -104,12 +107,12 @@ public class Login {
 
         signInBtn.addActionListener(e -> {
             //noinspection rawtypes
-            SwingWorker swingWorker = new SwingWorker(){
+            SwingWorker swingWorker = new SwingWorker() {
                 @Override
                 protected Boolean doInBackground() {
-                       rightSide.remove(signInBtn);
-                       rightSide.remove(signUpBtn);
-                       SwingUtilities.updateComponentTreeUI(CONTAINER);
+                    rightSide.remove(signInBtn);
+                    rightSide.remove(signUpBtn);
+                    SwingUtilities.updateComponentTreeUI(CONTAINER);
                     return null;
                 }
 
@@ -125,7 +128,7 @@ public class Login {
 
         signUpBtn.addActionListener(e -> {
             //noinspection rawtypes
-            SwingWorker swingWorker = new SwingWorker(){
+            SwingWorker swingWorker = new SwingWorker() {
                 @Override
                 protected Boolean doInBackground() {
                     rightSide.remove(signInBtn);
@@ -133,6 +136,7 @@ public class Login {
                     SwingUtilities.updateComponentTreeUI(CONTAINER);
                     return null;
                 }
+
                 @Override
                 protected void done() {
                     signUp();
@@ -142,7 +146,6 @@ public class Login {
             };
             swingWorker.execute();
         });
-
 
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -167,7 +170,7 @@ public class Login {
             hello.setBackground(Color.yellow);
             leftSide.add(hello);
             leftSide.add(label);
-        }catch(IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         // Adds JPanels to JFrame
@@ -177,7 +180,7 @@ public class Login {
     }
 
     void addBottomSection(@NotNull JXLabel label, JComponent component, JXPanel container,
-                          String labelName){
+                          String labelName) {
         container.setLayout(new BorderLayout()); // Set layout for section container
 
         // Add label
@@ -200,8 +203,8 @@ public class Login {
     /**
      * @return null
      * Sign in view
-     * */
-    void signIn(){
+     */
+    void signIn() {
         windowTitle.setText("Sign In");
         windowTitle.setFont(new Font(CONTAINER.getFont().getName(), Font.PLAIN, 24));
         windowTitle.setOpaque(true);
@@ -230,7 +233,7 @@ public class Login {
         JXTextField textField;
         textField = new JXTextField();
         JPasswordField passwordField;
-        passwordField= new JPasswordField();
+        passwordField = new JPasswordField();
         JXPanel sectionContainer1, sectionContainer;
         sectionContainer1 = new JXPanel();
         sectionContainer = new JXPanel();
@@ -246,16 +249,16 @@ public class Login {
         logIn.addActionListener(e -> {
             String phoneNumberText = textField.getText().trim();
             String userPassword = String.valueOf(passwordField.getPassword()).trim();
-            boolean shouldWriteIntoDb = new CheckFields( passwordField, logIn, FRAME, textField)
+            boolean writePermission = new CheckFields(passwordField, logIn, FRAME, textField)
                     .checkPassword("Sign In");
             List<DoctorModel> user = DoctorController.getOneDoctor(phoneNumberText,
                     userPassword);
-            if(!shouldWriteIntoDb) {
+            if (!writePermission) {
                 System.out.println(user);
-                if(user.isEmpty()) {
+                if (user.isEmpty()) {
                     JOptionPane.showMessageDialog(FRAME, "User not found..",
-                        "Invalid user credentials",
-                        JOptionPane.INFORMATION_MESSAGE);
+                            "Invalid user credentials",
+                            JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 setCurrentUser(user);
@@ -272,8 +275,8 @@ public class Login {
     /**
      * @return null,
      * Sign up View
-     * */
-    void signUp(){
+     */
+    void signUp() {
         windowTitle.setText("Sign Up");
         windowTitle.setFont(new Font(CONTAINER.getFont().getName(), Font.PLAIN, 24));
         windowTitle.setOpaque(true);
@@ -307,7 +310,7 @@ public class Login {
         roleField = new JXTextField();
         JPasswordField passwordField, passwordConfirmField;
         passwordConfirmField = new JPasswordField();
-        passwordField= new JPasswordField();
+        passwordField = new JPasswordField();
         JXPanel sectionContainer;
 
         // Adds sections to the Right JPanel
@@ -340,27 +343,28 @@ public class Login {
         submitBtn.setBorder(new EmptyBorder(5, 100, 5, 100));
         rightSide.add(submitBtn, constraints); // Adds submit button to the JPanel in the signUp page
         submitBtn.addActionListener(e -> {
-            boolean shouldWriteIntoDB = new CheckFields(passwordConfirmField, passwordField, submitBtn,
+            boolean writePermission = new CheckFields(passwordConfirmField, passwordField, submitBtn,
                     FRAME, nameTextField, roleField, phoneField,
                     departmentField, ageField).checkPassword("Sign up");
-            List<DoctorModel> user = DoctorController.getOneDoctor(phoneField.getText(),
-                    String.valueOf(passwordField.getPassword()));
-            if(!shouldWriteIntoDB) {
-                // Checks if user already exists in the database
+            List<DoctorModel> user = DoctorController.getDoctorByPhoneNumber(phoneField.getText().trim());
+
+            if (!writePermission ) {
                 if (!user.isEmpty()){
                     JOptionPane.showMessageDialog(FRAME, "Invalid credentials for current user," +
                                     " phone number is already in use.",
                             "Failed registration",
                             JOptionPane.INFORMATION_MESSAGE);
-                }else {
+                    return;
+                }
+                    // Checks if user already exists in the database
                     // If no user exists direct the existing user to sign in using their
                     // just entered credentials (Phone Number and Password)
-                    int nextScreen = DoctorController.createDoctor(nameTextField.getText().strip()
-                            , roleField.getText().strip(),
+                    int nextScreen = DoctorController.createDoctor(nameTextField.getText().trim()
+                            , roleField.getText().trim(),
                             phoneField.getText().trim(), ageField.getText().trim(),
-                            departmentField.getText().strip(),
-                            String.valueOf(passwordField.getPassword()), FRAME);
-                    if (nextScreen != 0){
+                            departmentField.getText().trim(),
+                            String.valueOf(passwordField.getPassword()).trim(), FRAME);
+                    if (nextScreen != 0) {
                         JOptionPane.showMessageDialog(FRAME, "Registration successful please wait....",
                                 "Successful registration",
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -370,19 +374,19 @@ public class Login {
                         setUser_id(nextScreen); // Sets current to the variable user_id
                     }
                 }
-            }
         });
 
     }
+
     // Removes all Elements form the JPanel
-    void removeElements(){
-        for(Component comp : rightSide.getComponents()){
+    void removeElements() {
+        for (Component comp : rightSide.getComponents()) {
             rightSide.remove(comp);
         }
     }
 
     // Use SwingWorker to update the UI
-    void swingWorkerUpdateUI(){
+    void swingWorkerUpdateUI() {
         //noinspection rawtypes
         SwingWorker sw = new SwingWorker<>() {
             @Override
@@ -390,6 +394,7 @@ public class Login {
                 SwingUtilities.updateComponentTreeUI(rightSide);
                 return null;
             }
+
             @Override
             protected void done() {
                 signIn();

@@ -13,6 +13,7 @@ public class Main {
             FlatSolarizedLightIJTheme.install();
             UIManager.put( "Component.focusWidth", 0 );
             UIManager.put( "Component.innerFocusWidth", 0 );
+            UIManager.put( "Button.arc", 0 );
             SwingUtilities.invokeLater(CreateConnection::new);
             SwingUtilities.invokeLater(new SplashScreenWindow());
             SwingUtilities.invokeLater(() -> new Login().setLoginFrame());
